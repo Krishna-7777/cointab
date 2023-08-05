@@ -35,6 +35,16 @@ router.post("/fetchAndAddUsers",async(ask,give)=>{
     }
 })
 
+router.delete("/allUsers",async(ask,give)=>{
+    try {
+        await User.destroy({where:{}})
+        give.send({msg:"All users have been deleted."})
+    } catch (error) {
+        console.log(error)
+     give.send({error:"Internal Server Error"})
+    }
+})
+
 module.exports={
     router
 }
