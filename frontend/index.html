@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<style>
+    body{
+        text-align: center;
+    }
+</style>
+<body>
+    <h1>Home Page</h1>
+    <hr>
+    <button id="fetchAndSave">Fetch Users And Save to Database</button>
+    <button id="DeleteAll">Delete All saved Users</button>
+    <button onclick="window.location='./users.html'">Users Details</button>
+</body>
+<script>
+    let fetchBtn=document.getElementById("fetchAndSave")
+    let deleteBtn=document.getElementById("DeleteAll")
+    let isFetching=false,isDeleting=false
+
+    fetchBtn.addEventListener("click",async()=>{
+        if(!isFetching){
+            isFetching=true
+            fetchBtn.innerText="Processing..."
+            let response=await fetch("http://127.0.0.1:4000/api/users/fetchAndSave",{
+                method:"POST",
+                headers:{
+                    "request-mode":"no-cors"
+                }
+            })
+            response=await response.json()
+            fetchBtn.innerText="Fetch Users And Save to Database"
+            isFetching=false
+            alert(response.msg)
+        }else{
+            alert("Please wait! This request is already in progress!")
+        }
+    })
+
+    deleteBtn.addEventListener("click",async()=>{
+        if(!isDeleting){
+            isDeleting=true
+            deleteBtn.innerText="Processing..."
+            let response=await fetch("http://127.0.0.1:4000/api/users/",{
+                method:"DELETE"
+            })
+            response=await response.json()
+            deleteBtn.innerText="Delete All saved Users"
+            isDeleting=false
+            alert(response.msg)
+        }else{
+            alert("Please wait! This request is already in progress!")
+        }
+    })
+</script>
+</html>
