@@ -12,6 +12,7 @@
     }
     table{
         width: 100%;
+        overflow:scroll;
     }
     #pagediv{
         display: flex;
@@ -19,11 +20,40 @@
         margin-left: 45%;
         justify-content: space-between;
     }
+    #filterTab{
+        display: flex;
+        justify-content: space-evenly;
+    }
+    #back{
+        position: absolute;
+        top: 3%;
+        right: 3%;
+    }
 </style>
 
 <body>
     <h1>User Details</h1>
     <hr>
+    <h3>Filters</h3>
+    <p>All filters are optional.</p>
+    <br>
+    <div id="filterTab">
+        <div>
+        <label for="page">Enter Page Number : </label>
+        <input type="number" name="page" id="pageFilter"></div>
+        <div>
+        <label for="age">Enter Age : </label>
+        <input type="number" name="age" id="ageFilter"></div>
+        <Select id="genderFilter">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </Select>
+        <button id="filter">Filter Results</button>
+    </div>
+    <br>
+    <hr>
+    <br>
     <table>
         <thead>
             <th>id</th>
@@ -49,11 +79,15 @@
 
         </tbody>
     </table>
+    <br>
+    <hr>
+    <br>
     <div id="pagediv">
         <button id="previous"> < </button>
         <p id="pageInfo">1 of Total</p>
         <button id="next"> > </button>
     </div>
+    <button id="back" onclick="window.location='./index.html'">Home</button>
 </body>
 <script>
     let age, gender
@@ -88,7 +122,7 @@
         }else{
             pbtn.removeAttribute("disabled")
         }
-        if(page == data.pages){
+        if(page >= data.pages||data.pages==0){
             nbtn.setAttribute("disabled", true)
         }else{
             nbtn.removeAttribute("disabled")
@@ -116,6 +150,7 @@
         tbody.innerHTML = ""
         tbody.innerHTML = tbodyHtml
     }
+
     fetchRender()
 
     pbtn.addEventListener("click", () => {
@@ -127,6 +162,30 @@
         page++
         fetchRender()
     })
+    
+    let pageFilter=document.getElementById("pageFilter")
+    // pageFilter.addEventListener('change',(e)=>{
+    //     page=pageFilter.value
+    // })
+
+    let ageFilter=document.getElementById("ageFilter")
+    // ageFilter.addEventListener('change',()=>{
+    //     age=ageFilter.value
+    // })
+
+    let genderFilter=document.getElementById("genderFilter")
+    // genderFilter.addEventListener('change',()=>{
+    //     gender=genderFilter.value
+    // })
+
+    document.getElementById("filter").addEventListener("click",()=>{
+        // console.log(age,gender,page)
+        page=pageFilter.value
+        age=ageFilter.value
+        gender=genderFilter.value
+        fetchRender()
+    })
+
 </script>
 
 </html>
