@@ -1,57 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
 <style>
-    body{
+    body {
         text-align: center;
     }
+
+    #delDialog {
+        display: none;
+        border: 2px dashed;
+        border-radius: 10px;
+        width: fit-content;
+        margin: 2% auto;
+        padding: 1%;
+    }
 </style>
+
 <body>
     <h1>Home</h1>
     <hr>
     <button id="fetchAndSave">Fetch Users And Save to Database</button>
     <button id="DeleteAll">Delete All saved Users</button>
     <button onclick="window.location='./users.html'">Users Details</button>
+    <div id="delDialog">
+        <h3>Are you sure you want to delete all users?</h3>
+        <button id="yes">Yes</button>
+        <button id="no">No</button>
+    </div>
 </body>
 <script>
-    let fetchBtn=document.getElementById("fetchAndSave")
-    let deleteBtn=document.getElementById("DeleteAll")
-    let isFetching=false,isDeleting=false
+    let fetchBtn = document.getElementById("fetchAndSave")
+    let deleteBtn = document.getElementById("DeleteAll")
+    let delDialog = document.getElementById("delDialog")
+    let yes = document.getElementById("yes")
+    let no = document.getElementById("no")
+    let isFetching = false
 
-    fetchBtn.addEventListener("click",async()=>{
-        if(!isFetching){
-            isFetching=true
-            fetchBtn.innerText="Processing..."
-            let response=await fetch("http://127.0.0.1:4000/api/users/fetchAndSave",{
-                method:"POST"
+    fetchBtn.addEventListener("click", async () => {
+        if (!isFetching) {
+            isFetching = true
+            fetchBtn.innerText = "Processing..."
+            let response = await fetch("http://127.0.0.1:4000/api/users/fetchAndSave", {
+                method: "POST"
             })
-            response=await response.json()
-            fetchBtn.innerText="Fetch Users And Save to Database"
-            isFetching=false
+            response = await response.json()
+            fetchBtn.innerText = "Fetch Users And Save to Database"
+            isFetching = false
             alert(response.msg)
-        }else{
+        } else {
             alert("Please wait! This request is already in progress!")
         }
     })
 
-    deleteBtn.addEventListener("click",async()=>{
-        if(!isDeleting){
-            isDeleting=true
-            deleteBtn.innerText="Processing..."
-            let response=await fetch("http://127.0.0.1:4000/api/users/",{
-                method:"DELETE"
-            })
-            response=await response.json()
-            deleteBtn.innerText="Delete All saved Users"
-            isDeleting=false
-            alert(response.msg)
-        }else{
-            alert("Please wait! This request is already in progress!")
-        }
+    deleteBtn.addEventListener("click", () => {
+        delDialog.setAttribute("style", "display:block")
+    })
+    yes.addEventListener('click', async () => {
+        delDialog.setAttribute("style", "display:none")
+        deleteBtn.innerText = "Processing..."
+        let response = await fetch("http://127.0.0.1:4000/api/users/", {
+            method: "DELETE"
+        })
+        response = await response.json()
+        deleteBtn.innerText = "Delete All saved Users"
+        alert(response.msg)
+    })
+    no.addEventListener('click', () => {
+        delDialog.setAttribute("style", "display:none")
     })
 </script>
+
 </html>
