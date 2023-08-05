@@ -1,8 +1,11 @@
 const express = require("express")
 const { sequelize } = require("./config/db");
 const { userRouter } = require("./routes/routes");
+const cors = require("cors")
 
 const app=express();
+
+app.use(cors())
 
 app.get('/',(ask,give)=>{
     give.send("Cointab Assignment Backend")

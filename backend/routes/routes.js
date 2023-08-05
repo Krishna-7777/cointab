@@ -28,7 +28,7 @@ userRouter.post("/fetchAndSave", async (ask, give) => {
             }
             await User.create(extractedUser)
         })
-        give.send({ msg: "Fetched and saved the user data to Mysql." })
+        give.send({ msg: "Fetched the data, then saved it to Mysql Database." })
     } catch (error) {
         console.log(error)
         give.send({ error: "Internal Server Error" })
