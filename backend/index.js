@@ -1,6 +1,6 @@
 const express = require("express")
 const { sequelize } = require("./config/db");
-const { router } = require("./routes/routes");
+const { userRouter } = require("./routes/routes");
 
 const app=express();
 
@@ -8,7 +8,7 @@ app.get('/',(ask,give)=>{
     give.send("Cointab Assignment Backend")
 })
 
-app.use('/api', router)
+app.use('/api/users', userRouter)
 
 app.listen(4000, async()=>{
     try {
