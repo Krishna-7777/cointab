@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+    table{
+        width: 100%;
+    }
+    #pagediv{
+        display: flex;
+        width: 10%;
+        margin-left: 45%;
+        justify-content: space-between;
+    }
+</style>
+
+<body>
+    <h1>User Details</h1>
+    <hr>
+    <table>
+        <thead>
+            <th>id</th>
+            <th>Gender</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Street Number</th>
+            <th>Street Name</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Age</th>
+            <th>Phone</th>
+            <th>Picture</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="15">Loading...</td>
+            </tr>
+
+        </tbody>
+    </table>
+    <div id="pagediv">
+        <button id="previous"> < </button>
+        <p id="pageInfo">1 of Total</p>
+        <button id="next"> > </button>
+    </div>
+</body>
+<script>
+    let age, gender
+    let page = 1
+    let tbody = document.querySelector("tbody")
+    let pInfo = document.getElementById('pageInfo')
+    let pbtn = document.getElementById("previous")
+    let nbtn = document.getElementById("next")
+    if (page == 1) {
+        pbtn.setAttribute("disabled", true)
+    }
+    let fetchRender = async () => {
+        let url = "http://127.0.0.1:4000/api/users"
+        if (age || gender || page > 1) {
+            url += '?'
+        }
+        if (age) {
+            url += `age=${age}&`
+        }
+        if (gender) {
+            url += `gender=${gender}&`
+        }
+        if (page > 1) {
+            url += `page=${page}`
+        }
+        let data = await fetch(url);
+        data = await data.json()
+        let tbodyHtml = ``
+        page = data.currentPage
+        if (page == 1) {
+            pbtn.setAttribute("disabled", true)
+        }else{
+            pbtn.removeAttribute("disabled")
+        }
+        if(page == data.pages){
+            nbtn.setAttribute("disabled", true)
+        }else{
+            nbtn.removeAttribute("disabled")
+        }
+        pInfo.innerText = `${data.currentPage} of ${data.pages}`
+        for (let user of data.results) {
+            tbodyHtml += `<tr>
+                    <td>${user.id}</td>
+                    <td>${user.gender}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.streetNumber}</td>
+                    <td>${user.streetName}</td>
+                    <td>${user.city}</td>
+                    <td>${user.state}</td>
+                    <td>${user.country}</td>
+                    <td>${user.email}</td>
+                    <td>${user.username}</td>
+                    <td>${user.password}</td>
+                    <td>${user.age}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.picture}</td>
+                </tr>`
+        }
+        tbody.innerHTML = ""
+        tbody.innerHTML = tbodyHtml
+    }
+    fetchRender()
+
+    pbtn.addEventListener("click", () => {
+        page--
+        fetchRender()
+    })
+    
+    nbtn.addEventListener("click", () => {
+        page++
+        fetchRender()
+    })
+</script>
+
+</html>
