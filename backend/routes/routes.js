@@ -26,7 +26,11 @@ userRouter.post("/fetchAndSave", async (ask, give) => {
                 phone: data.phone,
                 picture: data.picture.medium
             }
-            await User.create(extractedUser)
+            try {
+                await User.create(extractedUser)
+            } catch (error) {
+                console.log(error.name)
+            }
         })
         give.send({ msg: "Fetched the data, then saved it to Mysql Database." })
     } catch (error) {
