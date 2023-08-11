@@ -73,6 +73,18 @@ userRouter.get("/", async (ask, give) => {
     }
 })
 
+userRouter.get("/country/:country",async(ask,give)=>{
+    let country=ask.params.country
+    try {
+        let data = await User.count({where:{country}})
+        console.log(data)
+        give.send({msg:"data in console"})
+    } catch (error) {
+        console.log(error)
+        give.send({error:"Internal Server Error!"})
+    }
+})
+
 module.exports = {
     userRouter
 }
